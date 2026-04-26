@@ -144,84 +144,112 @@ st.markdown(f"""
 # =========================================================================
 # 2. CURATED BANK DATA (illustrative FY25 / Q4 FY26 figures)
 # =========================================================================
+def _bank(ticker, category, **fy25):
+    """Compact constructor for a bank row."""
+    fy25.setdefault("mix", dict(Retail=50, SME=12, Corporate=28, Others=10))
+    return {"ticker": ticker, "category": category, "fy25": fy25}
+
+
 BANKS: Dict[str, Dict[str, Any]] = {
-    "HDFC Bank": {
-        "ticker": "HDFCBANK.NS",
-        "fy25": dict(net_profit_cr=67200, yoy_pat=15.0, roe=16.8, nim=3.55,
-                     loan_growth=7.2, car=19.30, gross_npa=1.42, net_npa=0.46,
-                     casa=38.0, cost_income=39.5, fy24_npa=1.24,
-                     mix=dict(Retail=55, SME=12, Corporate=22, Others=11)),
-    },
-    "ICICI Bank": {
-        "ticker": "ICICIBANK.NS",
-        "fy25": dict(net_profit_cr=51470, yoy_pat=15.6, roe=19.0, nim=4.40,
-                     loan_growth=15.8, car=17.20, gross_npa=1.67, net_npa=0.39,
-                     casa=39.0, cost_income=39.0, fy24_npa=2.26,
-                     mix=dict(Retail=54, SME=11, Corporate=28, Others=7)),
-    },
-    "State Bank of India": {
-        "ticker": "SBIN.NS",
-        "fy25": dict(net_profit_cr=71000, yoy_pat=14.5, roe=17.4, nim=3.15,
-                     loan_growth=14.0, car=14.30, gross_npa=1.82, net_npa=0.47,
-                     casa=38.0, cost_income=51.5, fy24_npa=2.24,
-                     mix=dict(Retail=42, SME=15, Corporate=29, Others=14)),
-    },
-    "Kotak Mahindra Bank": {
-        "ticker": "KOTAKBANK.NS",
-        "fy25": dict(net_profit_cr=16400, yoy_pat=10.5, roe=14.0, nim=4.95,
-                     loan_growth=17.0, car=22.30, gross_npa=1.42, net_npa=0.34,
-                     casa=42.0, cost_income=46.0, fy24_npa=1.39,
-                     mix=dict(Retail=46, SME=14, Corporate=30, Others=10)),
-    },
-    "Axis Bank": {
-        "ticker": "AXISBANK.NS",
-        "fy25": dict(net_profit_cr=26000, yoy_pat=20.0, roe=17.0, nim=4.05,
-                     loan_growth=10.0, car=17.00, gross_npa=1.43, net_npa=0.31,
-                     casa=41.0, cost_income=49.0, fy24_npa=1.43,
-                     mix=dict(Retail=58, SME=11, Corporate=24, Others=7)),
-    },
-    "IndusInd Bank": {
-        "ticker": "INDUSINDBK.NS",
-        "fy25": dict(net_profit_cr=7500, yoy_pat=-12.0, roe=10.0, nim=3.95,
-                     loan_growth=6.0, car=16.50, gross_npa=2.10, net_npa=0.60,
-                     casa=38.0, cost_income=48.0, fy24_npa=1.92,
-                     mix=dict(Retail=55, SME=10, Corporate=27, Others=8)),
-    },
-    "Bank of Baroda": {
-        "ticker": "BANKBARODA.NS",
-        "fy25": dict(net_profit_cr=19300, yoy_pat=12.0, roe=16.0, nim=3.05,
-                     loan_growth=12.0, car=17.20, gross_npa=2.26, net_npa=0.59,
-                     casa=38.0, cost_income=49.0, fy24_npa=2.92,
-                     mix=dict(Retail=27, SME=15, Corporate=44, Others=14)),
-    },
-    "Punjab National Bank": {
-        "ticker": "PNB.NS",
-        "fy25": dict(net_profit_cr=17000, yoy_pat=85.0, roe=13.0, nim=3.00,
-                     loan_growth=13.0, car=16.00, gross_npa=3.95, net_npa=0.40,
-                     casa=41.0, cost_income=53.0, fy24_npa=5.73,
-                     mix=dict(Retail=27, SME=15, Corporate=44, Others=14)),
-    },
-    "Federal Bank": {
-        "ticker": "FEDERALBNK.NS",
-        "fy25": dict(net_profit_cr=4000, yoy_pat=8.0, roe=13.0, nim=3.10,
-                     loan_growth=16.0, car=16.40, gross_npa=2.10, net_npa=0.50,
-                     casa=30.0, cost_income=53.0, fy24_npa=2.13,
-                     mix=dict(Retail=53, SME=10, Corporate=28, Others=9)),
-    },
-    "IDFC First Bank": {
-        "ticker": "IDFCFIRSTB.NS",
-        "fy25": dict(net_profit_cr=2900, yoy_pat=-12.0, roe=9.0, nim=6.40,
-                     loan_growth=22.0, car=16.50, gross_npa=1.90, net_npa=0.60,
-                     casa=47.0, cost_income=72.0, fy24_npa=1.88,
-                     mix=dict(Retail=63, SME=10, Corporate=22, Others=5)),
-    },
-    "AU Small Finance Bank": {
-        "ticker": "AUBANK.NS",
-        "fy25": dict(net_profit_cr=2100, yoy_pat=18.0, roe=14.0, nim=5.50,
-                     loan_growth=25.0, car=18.50, gross_npa=1.78, net_npa=0.55,
-                     casa=33.0, cost_income=63.0, fy24_npa=1.67,
-                     mix=dict(Retail=60, SME=14, Corporate=18, Others=8)),
-    },
+    # ---------- Large private banks ----------
+    "HDFC Bank":             _bank("HDFCBANK.NS",   "Private",
+        net_profit_cr=67200, yoy_pat=15.0,  roe=16.8, nim=3.55, loan_growth=7.2,  car=19.30, gross_npa=1.42, net_npa=0.46, casa=38.0, cost_income=39.5, fy24_npa=1.24,
+        mix=dict(Retail=55, SME=12, Corporate=22, Others=11)),
+    "ICICI Bank":            _bank("ICICIBANK.NS",  "Private",
+        net_profit_cr=51470, yoy_pat=15.6,  roe=19.0, nim=4.40, loan_growth=15.8, car=17.20, gross_npa=1.67, net_npa=0.39, casa=39.0, cost_income=39.0, fy24_npa=2.26,
+        mix=dict(Retail=54, SME=11, Corporate=28, Others=7)),
+    "Kotak Mahindra Bank":   _bank("KOTAKBANK.NS",  "Private",
+        net_profit_cr=16400, yoy_pat=10.5,  roe=14.0, nim=4.95, loan_growth=17.0, car=22.30, gross_npa=1.42, net_npa=0.34, casa=42.0, cost_income=46.0, fy24_npa=1.39,
+        mix=dict(Retail=46, SME=14, Corporate=30, Others=10)),
+    "Axis Bank":             _bank("AXISBANK.NS",   "Private",
+        net_profit_cr=26000, yoy_pat=20.0,  roe=17.0, nim=4.05, loan_growth=10.0, car=17.00, gross_npa=1.43, net_npa=0.31, casa=41.0, cost_income=49.0, fy24_npa=1.43,
+        mix=dict(Retail=58, SME=11, Corporate=24, Others=7)),
+    "IndusInd Bank":         _bank("INDUSINDBK.NS", "Private",
+        net_profit_cr=7500,  yoy_pat=-12.0, roe=10.0, nim=3.95, loan_growth=6.0,  car=16.50, gross_npa=2.10, net_npa=0.60, casa=38.0, cost_income=48.0, fy24_npa=1.92,
+        mix=dict(Retail=55, SME=10, Corporate=27, Others=8)),
+    "IDFC First Bank":       _bank("IDFCFIRSTB.NS", "Private",
+        net_profit_cr=2900,  yoy_pat=-12.0, roe=9.0,  nim=6.40, loan_growth=22.0, car=16.50, gross_npa=1.90, net_npa=0.60, casa=47.0, cost_income=72.0, fy24_npa=1.88,
+        mix=dict(Retail=63, SME=10, Corporate=22, Others=5)),
+    "Yes Bank":              _bank("YESBANK.NS",    "Private",
+        net_profit_cr=2400,  yoy_pat=80.0,  roe=8.0,  nim=2.40, loan_growth=12.0, car=15.60, gross_npa=1.70, net_npa=0.60, casa=31.0, cost_income=72.0, fy24_npa=1.73,
+        mix=dict(Retail=49, SME=12, Corporate=33, Others=6)),
+    "RBL Bank":              _bank("RBLBANK.NS",    "Private",
+        net_profit_cr=1300,  yoy_pat=20.0,  roe=10.0, nim=5.40, loan_growth=18.0, car=15.70, gross_npa=2.60, net_npa=0.70, casa=35.0, cost_income=66.0, fy24_npa=2.65,
+        mix=dict(Retail=58, SME=8,  Corporate=28, Others=6)),
+    "Bandhan Bank":          _bank("BANDHANBNK.NS", "Private",
+        net_profit_cr=2700,  yoy_pat=-15.0, roe=12.0, nim=7.20, loan_growth=14.0, car=16.00, gross_npa=4.50, net_npa=1.40, casa=37.0, cost_income=49.0, fy24_npa=3.84,
+        mix=dict(Retail=70, SME=10, Corporate=15, Others=5)),
+    "Federal Bank":          _bank("FEDERALBNK.NS", "Private",
+        net_profit_cr=4000,  yoy_pat=8.0,   roe=13.0, nim=3.10, loan_growth=16.0, car=16.40, gross_npa=2.10, net_npa=0.50, casa=30.0, cost_income=53.0, fy24_npa=2.13,
+        mix=dict(Retail=53, SME=10, Corporate=28, Others=9)),
+
+    # ---------- Mid / small private banks ----------
+    "City Union Bank":       _bank("CUB.NS",        "Private",
+        net_profit_cr=1100,  yoy_pat=12.0,  roe=14.0, nim=3.50, loan_growth=14.0, car=23.00, gross_npa=3.40, net_npa=1.60, casa=29.0, cost_income=43.0, fy24_npa=4.47),
+    "South Indian Bank":     _bank("SOUTHBANK.NS",  "Private",
+        net_profit_cr=1200,  yoy_pat=20.0,  roe=14.0, nim=3.30, loan_growth=12.0, car=19.90, gross_npa=3.60, net_npa=0.90, casa=32.0, cost_income=63.0, fy24_npa=4.50),
+    "Karur Vysya Bank":      _bank("KARURVYSYA.NS", "Private",
+        net_profit_cr=1900,  yoy_pat=25.0,  roe=17.0, nim=4.10, loan_growth=14.0, car=18.90, gross_npa=1.00, net_npa=0.30, casa=29.0, cost_income=46.0, fy24_npa=1.40),
+    "DCB Bank":              _bank("DCBBANK.NS",    "Private",
+        net_profit_cr=600,   yoy_pat=15.0,  roe=12.0, nim=3.50, loan_growth=20.0, car=16.40, gross_npa=3.30, net_npa=1.20, casa=26.0, cost_income=63.0, fy24_npa=3.23),
+    "Karnataka Bank":        _bank("KTKBANK.NS",    "Private",
+        net_profit_cr=1400,  yoy_pat=10.0,  roe=14.0, nim=3.50, loan_growth=10.0, car=18.00, gross_npa=3.00, net_npa=1.30, casa=31.0, cost_income=58.0, fy24_npa=3.53),
+    "Tamilnad Mercantile":   _bank("TMB.NS",        "Private",
+        net_profit_cr=1100,  yoy_pat=10.0,  roe=14.0, nim=4.00, loan_growth=8.0,  car=29.70, gross_npa=1.40, net_npa=0.90, casa=29.0, cost_income=44.0, fy24_npa=1.69),
+    "CSB Bank":              _bank("CSBBANK.NS",    "Private",
+        net_profit_cr=600,   yoy_pat=20.0,  roe=15.0, nim=4.70, loan_growth=22.0, car=22.70, gross_npa=1.60, net_npa=0.60, casa=24.0, cost_income=68.0, fy24_npa=1.47),
+    "Dhanlaxmi Bank":        _bank("DHANBANK.NS",   "Private",
+        net_profit_cr=70,    yoy_pat=50.0,  roe=6.0,  nim=3.00, loan_growth=15.0, car=14.50, gross_npa=4.50, net_npa=0.50, casa=32.0, cost_income=82.0, fy24_npa=4.66),
+    "J&K Bank":              _bank("J&KBANK.NS",    "Private",
+        net_profit_cr=1900,  yoy_pat=18.0,  roe=18.0, nim=3.90, loan_growth=12.0, car=15.30, gross_npa=4.00, net_npa=0.80, casa=49.0, cost_income=58.0, fy24_npa=4.08),
+
+    # ---------- Public sector banks ----------
+    "State Bank of India":   _bank("SBIN.NS",       "PSU",
+        net_profit_cr=71000, yoy_pat=14.5,  roe=17.4, nim=3.15, loan_growth=14.0, car=14.30, gross_npa=1.82, net_npa=0.47, casa=38.0, cost_income=51.5, fy24_npa=2.24,
+        mix=dict(Retail=42, SME=15, Corporate=29, Others=14)),
+    "Bank of Baroda":        _bank("BANKBARODA.NS", "PSU",
+        net_profit_cr=19300, yoy_pat=12.0,  roe=16.0, nim=3.05, loan_growth=12.0, car=17.20, gross_npa=2.26, net_npa=0.59, casa=38.0, cost_income=49.0, fy24_npa=2.92,
+        mix=dict(Retail=27, SME=15, Corporate=44, Others=14)),
+    "Punjab National Bank":  _bank("PNB.NS",        "PSU",
+        net_profit_cr=17000, yoy_pat=85.0,  roe=13.0, nim=3.00, loan_growth=13.0, car=16.00, gross_npa=3.95, net_npa=0.40, casa=41.0, cost_income=53.0, fy24_npa=5.73,
+        mix=dict(Retail=27, SME=15, Corporate=44, Others=14)),
+    "Canara Bank":           _bank("CANBK.NS",      "PSU",
+        net_profit_cr=16100, yoy_pat=14.0,  roe=18.0, nim=2.90, loan_growth=12.0, car=16.00, gross_npa=2.90, net_npa=0.80, casa=32.0, cost_income=46.0, fy24_npa=4.23),
+    "Union Bank of India":   _bank("UNIONBANK.NS",  "PSU",
+        net_profit_cr=17800, yoy_pat=25.0,  roe=15.0, nim=3.00, loan_growth=11.0, car=16.40, gross_npa=3.70, net_npa=0.60, casa=33.0, cost_income=49.0, fy24_npa=4.76),
+    "Bank of India":         _bank("BANKINDIA.NS",  "PSU",
+        net_profit_cr=7000,  yoy_pat=45.0,  roe=12.0, nim=3.00, loan_growth=14.0, car=16.20, gross_npa=4.00, net_npa=0.90, casa=42.0, cost_income=53.0, fy24_npa=5.35),
+    "Indian Bank":           _bank("INDIANB.NS",    "PSU",
+        net_profit_cr=9000,  yoy_pat=37.0,  roe=18.0, nim=3.50, loan_growth=11.0, car=17.20, gross_npa=3.10, net_npa=0.40, casa=39.0, cost_income=46.0, fy24_npa=3.95),
+    "Central Bank of India": _bank("CENTRALBK.NS",  "PSU",
+        net_profit_cr=3000,  yoy_pat=55.0,  roe=10.0, nim=3.40, loan_growth=15.0, car=16.30, gross_npa=4.60, net_npa=0.70, casa=49.0, cost_income=58.0, fy24_npa=4.50),
+    "Indian Overseas Bank":  _bank("IOB.NS",        "PSU",
+        net_profit_cr=3000,  yoy_pat=24.0,  roe=11.0, nim=3.10, loan_growth=11.0, car=17.30, gross_npa=3.00, net_npa=0.60, casa=43.0, cost_income=58.0, fy24_npa=3.10),
+    "UCO Bank":              _bank("UCOBANK.NS",    "PSU",
+        net_profit_cr=2400,  yoy_pat=21.0,  roe=10.0, nim=2.90, loan_growth=15.0, car=16.80, gross_npa=3.50, net_npa=0.80, casa=38.0, cost_income=58.0, fy24_npa=3.46),
+    "Bank of Maharashtra":   _bank("MAHABANK.NS",   "PSU",
+        net_profit_cr=4500,  yoy_pat=35.0,  roe=22.0, nim=4.00, loan_growth=18.0, car=17.40, gross_npa=1.90, net_npa=0.20, casa=49.0, cost_income=39.0, fy24_npa=1.88),
+    "Punjab & Sind Bank":    _bank("PSB.NS",        "PSU",
+        net_profit_cr=720,   yoy_pat=25.0,  roe=8.0,  nim=2.60, loan_growth=12.0, car=17.40, gross_npa=4.00, net_npa=1.20, casa=32.0, cost_income=63.0, fy24_npa=5.43),
+
+    # ---------- Small Finance Banks ----------
+    "AU Small Finance Bank": _bank("AUBANK.NS",     "Small Finance",
+        net_profit_cr=2100,  yoy_pat=18.0,  roe=14.0, nim=5.50, loan_growth=25.0, car=18.50, gross_npa=1.78, net_npa=0.55, casa=33.0, cost_income=63.0, fy24_npa=1.67,
+        mix=dict(Retail=60, SME=14, Corporate=18, Others=8)),
+    "Equitas SFB":           _bank("EQUITASBNK.NS", "Small Finance",
+        net_profit_cr=700,   yoy_pat=10.0,  roe=12.0, nim=7.70, loan_growth=22.0, car=21.70, gross_npa=2.80, net_npa=1.30, casa=31.0, cost_income=63.0, fy24_npa=2.61),
+    "Ujjivan SFB":           _bank("UJJIVANSFB.NS", "Small Finance",
+        net_profit_cr=1300,  yoy_pat=8.0,   roe=20.0, nim=8.80, loan_growth=18.0, car=24.00, gross_npa=2.40, net_npa=0.30, casa=26.0, cost_income=55.0, fy24_npa=2.20),
+    "Suryoday SFB":          _bank("SURYODAY.NS",   "Small Finance",
+        net_profit_cr=220,   yoy_pat=20.0,  roe=12.0, nim=10.10,loan_growth=24.0, car=27.00, gross_npa=2.80, net_npa=1.00, casa=18.0, cost_income=62.0, fy24_npa=2.73),
+    "Capital SFB":           _bank("CAPITALSFB.NS", "Small Finance",
+        net_profit_cr=110,   yoy_pat=15.0,  roe=11.0, nim=4.00, loan_growth=18.0, car=25.40, gross_npa=2.70, net_npa=1.40, casa=39.0, cost_income=65.0, fy24_npa=2.85),
+    "Jana SFB":              _bank("JANASFB.NS",    "Small Finance",
+        net_profit_cr=660,   yoy_pat=80.0,  roe=22.0, nim=8.00, loan_growth=22.0, car=20.30, gross_npa=2.70, net_npa=0.50, casa=20.0, cost_income=58.0, fy24_npa=2.80),
+    "ESAF SFB":              _bank("ESAFSFB.NS",    "Small Finance",
+        net_profit_cr=430,   yoy_pat=15.0,  roe=20.0, nim=10.70,loan_growth=18.0, car=23.30, gross_npa=4.70, net_npa=2.40, casa=21.0, cost_income=65.0, fy24_npa=4.16),
+    "Utkarsh SFB":           _bank("UTKARSHBNK.NS", "Small Finance",
+        net_profit_cr=500,   yoy_pat=25.0,  roe=23.0, nim=9.40, loan_growth=23.0, car=22.40, gross_npa=2.50, net_npa=0.05, casa=27.0, cost_income=56.0, fy24_npa=3.23),
 }
 
 
@@ -330,16 +358,35 @@ def card_close():
 # 4. SIDEBAR — selection + overrides
 # =========================================================================
 st.sidebar.markdown(f"## 🏦 Indian Bank Analyzer")
-st.sidebar.caption("Live market data + curated fundamentals")
+st.sidebar.caption(f"Live market data + curated fundamentals — covering **{len(BANKS)} listed Indian banks**")
+
+# --- Category filter (Private / PSU / Small Finance / All) ---
+_categories = sorted({b["category"] for b in BANKS.values()})
+category_choice = st.sidebar.radio(
+    "Category",
+    ["All"] + _categories,
+    index=0,
+    horizontal=True,
+)
+
+# Filter bank universe by chosen category
+if category_choice == "All":
+    _bank_options = list(BANKS.keys())
+else:
+    _bank_options = [k for k, v in BANKS.items() if v["category"] == category_choice]
+
+# Default to ICICI when available so the dashboard mirrors the original infographic
+_default_index = _bank_options.index("ICICI Bank") if "ICICI Bank" in _bank_options else 0
 
 bank_name = st.sidebar.selectbox(
-    "Choose a bank",
-    list(BANKS.keys()),
-    index=1,                       # default to ICICI to mirror your infographic
+    f"Choose a bank ({len(_bank_options)} in {category_choice})",
+    _bank_options,
+    index=_default_index,
 )
 
 cfg = BANKS[bank_name].copy()
 ticker_default = cfg["ticker"]
+st.sidebar.caption(f"Category: **{cfg['category']}**  •  Ticker: `{ticker_default}`")
 
 custom_ticker = st.sidebar.text_input(
     "or override the NSE ticker",
