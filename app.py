@@ -1,3 +1,4 @@
+
 """
 =========================================================================
 Indian Bank Stock Analyzer — Streamlit Dashboard
@@ -113,6 +114,29 @@ st.markdown(f"""
     .verdict.green  {{ background: {GREEN}; }}
 
     .stMetric > div {{ background: transparent; }}
+
+    /* ---------- Profile footer ---------- */
+    .profile-footer {{
+        margin-top: 28px; padding: 22px 28px;
+        background: {CARD}; border: 1px solid {DIVIDER};
+        border-top: 4px solid {NAVY}; border-radius: 12px;
+        text-align: center;
+    }}
+    .profile-name {{
+        font-size: 1.15rem; font-weight: 700; color: {NAVY}; margin: 0;
+    }}
+    .profile-tagline {{
+        font-size: 0.92rem; color: {SLATE}; margin: 4px 0 12px 0;
+    }}
+    .profile-links {{ font-size: 0.95rem; }}
+    .profile-links a {{
+        color: {NAVY_LIGHT}; text-decoration: none; font-weight: 600;
+        margin: 0 10px;
+    }}
+    .profile-links a:hover {{
+        color: {GOLD}; text-decoration: underline;
+    }}
+    .profile-divider {{ color: {DIVIDER}; margin: 0 4px; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -648,3 +672,29 @@ st.caption(
     "annual report and exchange filings before any investment decision. Live market data via "
     "Yahoo Finance — subject to data quality and feed availability."
 )
+
+
+# =========================================================================
+# 14. PROFILE FOOTER
+# =========================================================================
+st.markdown("""
+<div class="profile-footer">
+    <div class="profile-name">Prof. V. Ravichandran</div>
+    <div class="profile-tagline">
+        Financial Analytics &nbsp;·&nbsp; Risk Modelling &nbsp;·&nbsp; The Mountain Path Academy
+    </div>
+    <div class="profile-links">
+        <a href="https://www.themountainpathacademy.com" target="_blank" rel="noopener">
+            🌐 themountainpathacademy.com
+        </a>
+        <span class="profile-divider">|</span>
+        <a href="https://www.linkedin.com/in/trichyravis" target="_blank" rel="noopener">
+            in &nbsp;LinkedIn
+        </a>
+        <span class="profile-divider">|</span>
+        <a href="https://github.com/trichyravis" target="_blank" rel="noopener">
+            ⌗ &nbsp;GitHub
+        </a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
